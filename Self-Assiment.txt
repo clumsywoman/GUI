@@ -1,0 +1,38 @@
+Year Assessment 2023 - Vaibhav Sarode
+
+Individual Goal
+
+Support and follow up with product and engineering for:- payment simulators - product demos- online documentations -integration video
+
+* Raised JIRA ticket for UPI intent issue to Product and Engineering Team, responded and suggested solutions consulted by Product Manager and Engineering team. 
+* Successfully Completed and certified, Data Structures and Algorithms in JAVA online course from NPTEL Portal and Certified by IIT Kharagpur. 
+* Created Android WebView Project to try and test PayU Payments, also implemented UPI Intent for UPI redirection. 
+* Successfully created API with the help of Spring Tool Suite to understand the in-depth API flow, implemented API which gives input data as in response with JSON / XML. 
+
+
+
+Merchant Experience
+
+Integration-sigh off to be added off - implement DMAIC on individual productivity - creating local integration champions/integration resellers
+
+* Timely solutions delivered to the Merchant such as hungama, Adani, Renpl and others. 
+* Integrated PayU platform with multiple websites with different transaction flows example: PayU Hosted Checkout, Merchant Hosted Checkout, Payload Integrations. 
+* Given demo sessions for Integrations like Standing Instructions, Payouts, EMI, Split Payments, WhatsApp UPI Intent Integration. 
+* Given live demonstration of Payment flow and solutions for asked queries. 
+
+
+
+SLA
+
+Establish team SLA and maintain it @95% on T+3- identify and plug leakages.
+
+* Completed given task on time, no escalations has been taken place while clearing tickets 
+* Within Turn Around Time (TAT) all the tickets are closed and resolved. 
+* No SLA breached while handling the tickets, solutions delivered on time. 
+* Good feedback has been received from merchants for good support. 
+
+
+
+Overall Summery :
+
+Given all efforts towards learning PayU Payment Gateway Services / Knowledge, new developments, new system and received good experience with different solutions, continuously working with good pace and wishing great learning ahed.
