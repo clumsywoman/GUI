@@ -1,0 +1,262 @@
+User Implementation:
+
+API Module 1: Add Bank Code Details API
+	Inserting bank code details into banks table - holds Bank Code details -, this API has been configured under User API module to add n numbers of banks for first level validation, however it must contain request body in below JSON format :
+API Endpoint URL : localhost:8080/User/banks
+
+Postman CURL Collection:
+curl --location 'localhost:8080/User/banks' \
+--header 'Content-Type: application/json' \
+--data '{
+    "peerBankCode":"KOTAK0015",
+    "peerBankBranch":"Goregaon West",
+    "peerBankName":"Kotak Mahindra Bank"
+}'
+
+Once data has been added for BankCode Details, it will gives you inserted data in below mentioned JSON format:
+
+addBankCodeDetails - Success Response:
+
+{
+    "id": 502,
+    "peerBankCode": "KOTAK0015",
+    "peerBankBranch": "Goregaon West",
+    "peerBankName": "Kotak Mahindra Bank",
+    "bank_verify": false
+}
+
+Whenever User Transaction Request API gets triggered, it will first validates the BankCode existance in banks table, if it exists then only User Transation Response will be reverted back to users.
+
+API Module 2: User Transaction Request API
+	While initiating transaction fron User Transaction API, it would required all the parameters in the request body, as there is seperate logic to validate bank code and append associated details in the transaction response. Once User makes a request, bank codes gets validated via BankRepository and bank verify status, bank name, branch name, bank code gets updated in user response body via BankEntity object.
+While in the back-end code script generates, unique string value PID and numeric transaction id for each transaction request, also calculated UVR with string concatination and implementing AES 128 bit with the help of encryption key.
+Since Payment Service Application has UVR Unique Valodation Resposne for each transaction, it has been calculated with help of AES 128 bit encryption associated with their encryption key, please check below formula which has been used to calculate UVR Unique Validation Response:
+Note : For more security enhancement UVR stored in users table as in "encrypted_str" along with encryption key as "aes_128bit_enckey".
+		AesCryptUtil aesCryptUtil = new AesCryptUtil(KEY);
+		String AESData = aesCryptUtil.encrypt(userEntity.getPid()+"&"+userEntity.getTransactionid()+"&"+userEntity.getFirstname()+"&"+userEntity.getLastname()+"&"+userEntity.getAmount()+"&"+userEntity.getCurrency()+"&"+userEntity.getEmail());
+		
+Further, encrypted_str, aes_128bit_enckey and associated UVR gets stored in user table via UserEntity, simultaniously newbanks table added the same date via PeerBankEntity, hence UserRequest update the transaction in two table users and newbank.
+By using the response object the API response will be reverted back into the function and visible to the end user. for back-end bank operation, it is already been added in newbanks table.
+
+Implementing UserTransaction Request from Postman:
+curl --location 'localhost:8080/User' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "firstname":"Vaibhav",
+    "lastname":"Sarode",
+    "phone":"9876543210",
+    "peerBankCode":"KOTAK0015",
+    "email":"vaibhavsarode10@gmail.com",
+    "amount":"1000.00",
+    "currency":"INR"
+}'
+
+UserTransaction Response in Postman:
+
+{
+    "firstname": "Vaibhav",
+    "lastname": "Sarode",
+    "phone": "9876543210",
+    "peerBankName": "Kotak Mahindra Bank",
+    "peerBankCode": "KOTAK0015",
+    "peerBankBranch": "Goregaon West",
+    "currency": "INR",
+    "amount": "1000.00",
+    "pid": "2Dj95xk7Pe",
+    "status": "Request Initiated",
+    "email": "vaibhavsarode10@gmail.com",
+    "transactionid": "5900922805",
+    "uvr": "1ad1007035c20ecd23c3009267e8661656bb318e88bdb9cbf04f1a64013b5a72844e1ee8ba2027755cfd20a82f3b25eeee7021fb1bfac3b2e5e690bdb3a7ee0aaa0b5c78a184605aa03c4a9b0862974f"
+}
+Once transaction is requested, default status will be marked as "Request Initiated" until it gets autherized through Bank Implemetation.
+
+Note : It also contains the NullPointerException, hence it throws exception is any values in request is null or black.
+
+Bank Implementation:
+
+API Module 3: TransactionStatus API
+
+	As transaction ID is responded in the User Transation Resposne, the UVR value and trasaction ID should be used for further autherization on the banks end, as it should first check whether given transaction exists on bank end or not. TransactionStatus API required transaction id to check transaction existance in the newbanks table. Check below postman collection for implemetation:
+TransactionStatus API Request:
+
+curl --location --request GET 'http://localhost:8082/bank/txnstatus' \
+--header 'Content-Type: application/json' \
+--data '{
+    "transactionid":"5900922805"
+}'
+
+TransactionStatus API Response:
+
+vaibhav will share
+
+
+API Module 4: uvrValidationCheckWithTxnId API
+
+	Once transaction status checked successfully, the user's UVR and transaction ID should be used for the implemetation, once UVR and Transaction ID is insertred into the request it will first validate the given transaction ID in banks table, if it exixsts then it further check the match or mis-match cases for UVR, if User UVR matches successfully, transaction marked as Success and uatherization gets completed, if it fails to validate the UVR autherization gets failed and update the respective status on baoth users and banks table.
+Implementing uvrValidationCheckWithTxnId API from postman:
+
+curl --location 'http://localhost:8082/bank/transaction' \
+--header 'Content-Type: application/json' \
+--data '{
+    "transactionid":"5900922805",
+    "uvr": "1ad1007035c20ecd23c3009267e8661656bb318e88bdb9cbf04f1a64013b5a72844e1ee8ba2027755cfd20a82f3b25eeee7021fb1bfac3b2e5e690bdb3a7ee0aaa0b5c78a184605aa03c4a9b0862974f"
+}'
+
+uvrValidationCheckWithTxnId API Resposne in postman:
+
+{
+    "bank_verify": true
+    "firstname": "Vaibhav",
+    "lastname": "Sarode",
+    "phone": "9876543210",
+    "peerBankName": "Kotak Mahindra Bank",
+    "peerBankCode": "KOTAK0015",
+    "peerBankBranch": "Goregaon West",
+    "currency": "INR",
+    "amount": "1000.00",
+    "pid": "2Dj95xk7Pe",
+    "status": "Transaction Successful",
+    "email": "vaibhavsarode10@gmail.com",
+    "transactionid": "5900922805",
+    "date": 1678288260447,
+    "uvr": "1ad1007035c20ecd23c3009267e8661656bb318e88bdb9cbf04f1a64013b5a72844e1ee8ba2027755cfd20a82f3b25eeee7021fb1bfac3b2e5e690bdb3a7ee0aaa0b5c78a184605aa03c4a9b0862974f"
+}
+
+In-case Transaction ID does not match with newbanks table data, it will throws an excetion stating "Tranasction ID Not Found" and allows user upto 3 attempts, then after marked as failed.
+
+API Module 5: AllUserTransactionDetails API
+
+	On bank's end, how many transaction has been completed successfully or marked mailed or initiated, all the transaction details will be fetched from UserRepository via UserEntity and displaying data to the Bank Admin to check and verify.
+
+AllUserTransactionDetails API Request from postman:
+
+curl --location 'localhost:8082/banks/users'
+
+AllUserTransactionDetails API Response in postman:
+[
+    {
+        "bank_verify": true,
+        "firstname": "Surbhi",
+        "lastname": "Jadhav",
+        "phone": "9876543210",
+        "peerBankName": "Kotak Bank",
+        "peerBankCode": "Kotak001",
+        "peerBankBranch": "Goregaon West",
+        "currency": "INR",
+        "amount": "10.00",
+        "pid": "Wz69tedbiG",
+        "status": "Transaction Successful",
+        "email": "surbhijadhav@gmail.com",
+        "transactionid": "9627648483",
+        "date": 1678286230396,
+        "uvr": "55087752ebc33fd12d89f3ed1a6d420902353339b834f420e735157057d7bf63a493fc8870035fe652a6fcb26a84776f869d5374f70b39fb626c1852c93307f1d7c6a5193f706ed458281f631d1edd0a"
+    },
+    {
+        "bank_verify": true,
+        "firstname": "Surbhi",
+        "lastname": "Jadhav",
+        "phone": "9876543210",
+        "peerBankName": "Kotak Bank",
+        "peerBankCode": "Kotak001",
+        "peerBankBranch": "Goregaon West",
+        "currency": "INR",
+        "amount": "10.00",
+        "pid": "9PreacZJWo",
+        "status": "Transaction Successful",
+        "email": "surbhijadhav@gmail.com",
+        "transactionid": "7481304759",
+        "date": 1678286279052,
+        "uvr": "50765365560a1f8ced3ad5287f59e9efba99a61d65d8de9af1878d6bf65b03ed32ba5fc6db7ab5cbe262741d7b74144c3a2b058578acc4d313cc94fe2f0a3160a1d7c9f4143a23125b29507aa015d508"
+    },
+    {
+        "bank_verify": true,
+        "firstname": "Surbhi",
+        "lastname": "Jadhav",
+        "phone": "9876543210",
+        "peerBankName": "Kotak Bank",
+        "peerBankCode": "Kotak001",
+        "peerBankBranch": "Goregaon West",
+        "currency": "INR",
+        "amount": "10.00",
+        "pid": "qEU5x4Q1XN",
+        "status": "Transaction Successful",
+        "email": "surbhijadhav@gmail.com",
+        "transactionid": "6220577440",
+        "date": 1678286306217,
+        "uvr": "ec89649b827f01f0a0fa8a3069b1fd54eb086add89e7c9f2f7a071ab0424efc7d6d5eb33910ffaf81cd90b01c1f42284695f18b5d7732ab4a81ad858863ac44d3730706fe0e29f28427c4fcf9fc4a271"
+    },
+    {
+        "bank_verify": true,
+        "firstname": "Surbhi",
+        "lastname": "Jadhav",
+        "phone": "9876543210",
+        "peerBankName": "Kotak Bank",
+        "peerBankCode": "Kotak001",
+        "peerBankBranch": "Goregaon West",
+        "currency": "INR",
+        "amount": "10.00",
+        "pid": "JsNRIujpHv",
+        "status": "Transaction Successful",
+        "email": "surbhijadhav@gmail.com",
+        "transactionid": "1229275215",
+        "date": 1678286323507,
+        "uvr": "59b0fec38ee5be90adfde9fdabc25d49637544992fee17c2b067f3bcb063b540c3eafb374069b91bb022e586ab9f32aab0abb65df3c8e64697bff59d10873b5a192a7a3ce5eed0106c9470d0801f6537"
+    },
+    {
+        "bank_verify": true,
+        "firstname": "Surbhi",
+        "lastname": "Jadhav",
+        "phone": "9876543210",
+        "peerBankName": "Kotak Bank",
+        "peerBankCode": "Kotak001",
+        "peerBankBranch": "Goregaon West",
+        "currency": "INR",
+        "amount": "10.00",
+        "pid": "3EmH7DPeGD",
+        "status": "Transaction Successful",
+        "email": "surbhijadhav@gmail.com",
+        "transactionid": "1137925564",
+        "date": 1678286369431,
+        "uvr": "815d2d13c64d553d2780aed2d056c0381601766530cf65a4066092c69d8efd366dee2ad8fef4da1cc1e1089081040b05b069b6181868c67e990f53a797aa0fb914d33664be3a8888a4c575c001dfabcd"
+    }
+]
+
+
+API Module 6: getAllTransactionInfoBank API
+	Similarly, Bank Admin must have access to check newbanks table from an API, it will retrive the data in list format from BankRepository via BankEntity class module.
+
+getAllTransactionInfoBank API Request from Postman:
+
+curl --location 'http://localhost:8082/bank/newbank'
+
+getAllTransactionInfoBank API Response in Postman:
+
+[
+    {
+        "id": 52,
+        "peerBankCode": "SBI0003",
+        "peerBankBranch": "Andheri West",
+        "peerBankName": "State Bank Of India",
+        "transactionid": "5707138766",
+        "bank_verify": false,
+        "uvr": "fc0d6fb8801cbfb3136e9a17bd4864af4010bd7ecd601c16fa4901562c1ffd16323d538bb6f83b23345e246264dc158097d8740942062ac09931fbaf56c4bdd1cc3b0d810dc112652da078560a1d346e"
+    },
+    {
+        "id": 102,
+        "peerBankCode": "KOTAK0015",
+        "peerBankBranch": "Goregaon West",
+        "peerBankName": "Kotak Mahindra Bank",
+        "transactionid": "8675590628",
+        "bank_verify": true,
+        "uvr": "96b9465f41ecaa37ab1fa5a47ab77a2968d7f85d2598b72b1b8c782540f2408881d63ee8a399b645670a65a3d09a4275f84c3c22a3a3a208a117e9826a9a0f047a82e2a34c0fc7a27e22320436d640c6"
+    },
+    {
+        "id": 152,
+        "peerBankCode": "KOTAK0015",
+        "peerBankBranch": "Goregaon West",
+        "peerBankName": "Kotak Mahindra Bank",
+        "transactionid": "5900922805",
+        "bank_verify": true,
+        "uvr": "1ad1007035c20ecd23c3009267e8661656bb318e88bdb9cbf04f1a64013b5a72844e1ee8ba2027755cfd20a82f3b25eeee7021fb1bfac3b2e5e690bdb3a7ee0aaa0b5c78a184605aa03c4a9b0862974f"
+    }
+]	
