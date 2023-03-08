@@ -2,6 +2,8 @@
 
 session_start();
 
+date_default_timezone_set("Asia/Calcutta");
+
 $curl = curl_init();
 
 $Firstname = $_POST['firstname'];
@@ -61,7 +63,7 @@ $resppeerBankBranch = $apiResponse['peerBankBranch'];
 $resppid = $apiResponse['pid'];
 $respstatus = $apiResponse['status'];
 $respuvr = $apiResponse['uvr'];
-$resptransactionid = $apiResponse['transactionid']."1";
+$resptransactionid = $apiResponse['transactionid'];
 $respdate = $apiResponse['date'];
 
 
@@ -135,9 +137,26 @@ echo "<br>";
 echo "<B>Transaction Status: </B>".$brespStatus;
 echo "<br>";
 
-echo "<B>Date: </B>".$brespDate;
+$dateFormat = date('d-m-Y H:i:s',$brespDate/1000);
+echo "<B>Date: </B>".$dateFormat;
 echo "<br>";
 
+
+/*
+
+<?php
+$today = date("F j, Y, g:i a");                 // March 10, 2001, 5:16 pm
+$today = date("m.d.y");                         // 03.10.01
+$today = date("j, n, Y");                       // 10, 3, 2001
+$today = date("Ymd");                           // 20010310
+$today = date('h-i-s, j-m-y, it is w Day');     // 05-16-18, 10-03-01, 1631 1618 6 Satpm01
+$today = date('\i\t \i\s \t\h\e jS \d\a\y.');   // it is the 10th day.
+$today = date("D M j G:i:s T Y");               // Sat Mar 10 17:16:18 MST 2001
+$today = date('H:m:s \m \i\s\ \m\o\n\t\h');     // 17:03:18 m is month
+$today = date("H:i:s");                         // 17:16:18
+?>
+
+*/
 
 echo "<B>Date: </B>".$brespDate;
 echo "<br>";
@@ -179,7 +198,7 @@ echo "<br>";
 
 //echo idate('y', $brespDate);
 
-print_r($response1);
+//print_r($response1);
 
 // Transaction ID and UVR validation 
 if($brespTxnID == $resptransactionid && $brespUVR == $respuvr ){
@@ -188,7 +207,17 @@ if($brespTxnID == $resptransactionid && $brespUVR == $respuvr ){
   header("refresh:5; URL=http://www.example.com/another-page.php");
   exit();
 }else{
+
   //Failed
+  foreach($BankResponse as $key => $value) {
+      if(str_contains($value, "!!Error!!")){
+        echo " <b>" . $key . " : " . $value . "</b> ";
+        echo "<br><br>"."<b>Exception Occured !! Please check error msg and retry the payment !!</b>";
+        header("refresh:5; URL=http://google.com");
+        exit();
+      }
+   }
+
   header("refresh:5; URL=http://tutorialspoint.com");
   exit();
 }
