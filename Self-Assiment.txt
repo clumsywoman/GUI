@@ -36,3 +36,104 @@ Establish team SLA and maintain it @95% on T+3- identify and plug leakages.
 Overall Summery :
 
 Given all efforts towards learning PayU Payment Gateway Services / Knowledge, new developments, new system and received good experience with different solutions, continuously working with good pace and wishing great learning ahed.
+
+
+
+
+
+
+
+
+
+
+
+
+
+[
+
+{
+        "bank_verify": true,
+        "firstname": "Surbhi",
+        "lastname": "Jadhav",
+        "phone": "9876543210",
+        "peerBankName": "Kotak Bank",
+        "peerBankCode": "Kotak001",
+        "peerBankBranch": "Goregaon West",
+        "currency": "INR",
+        "amount": "10.00",
+        "pid": "Wz69tedbiG",
+        "status": "Transaction Successful",
+        "email": "surbhijadhav@gmail.com",
+        "transactionid": "9627648483",
+        "date": 1678286230396,
+        "uvr": "55087752ebc33fd12d89f3ed1a6d420902353339b834f420e735157057d7bf63a493fc8870035fe652a6fcb26a84776f869d5374f70b39fb626c1852c93307f1d7c6a5193f706ed458281f631d1edd0a"
+    },
+    {
+        "bank_verify": true,
+        "firstname": "Surbhi",
+        "lastname": "Jadhav",
+        "phone": "9876543210",
+        "peerBankName": "Kotak Bank",
+        "peerBankCode": "Kotak001",
+        "peerBankBranch": "Goregaon West",
+        "currency": "INR",
+        "amount": "10.00",
+        "pid": "9PreacZJWo",
+        "status": "Transaction Successful",
+        "email": "surbhijadhav@gmail.com",
+        "transactionid": "7481304759",
+        "date": 1678286279052,
+        "uvr": "50765365560a1f8ced3ad5287f59e9efba99a61d65d8de9af1878d6bf65b03ed32ba5fc6db7ab5cbe262741d7b74144c3a2b058578acc4d313cc94fe2f0a3160a1d7c9f4143a23125b29507aa015d508"
+    },
+    {
+        "bank_verify": true,
+        "firstname": "Surbhi",
+        "lastname": "Jadhav",
+        "phone": "9876543210",
+        "peerBankName": "Kotak Bank",
+        "peerBankCode": "Kotak001",
+        "peerBankBranch": "Goregaon West",
+        "currency": "INR",
+        "amount": "10.00",
+        "pid": "qEU5x4Q1XN",
+        "status": "Transaction Successful",
+        "email": "surbhijadhav@gmail.com",
+        "transactionid": "6220577440",
+        "date": 1678286306217,
+        "uvr": "ec89649b827f01f0a0fa8a3069b1fd54eb086add89e7c9f2f7a071ab0424efc7d6d5eb33910ffaf81cd90b01c1f42284695f18b5d7732ab4a81ad858863ac44d3730706fe0e29f28427c4fcf9fc4a271"
+    },
+    {
+        "bank_verify": true,
+        "firstname": "Surbhi",
+        "lastname": "Jadhav",
+        "phone": "9876543210",
+        "peerBankName": "Kotak Bank",
+        "peerBankCode": "Kotak001",
+        "peerBankBranch": "Goregaon West",
+        "currency": "INR",
+        "amount": "10.00",
+        "pid": "JsNRIujpHv",
+        "status": "Transaction Successful",
+        "email": "surbhijadhav@gmail.com",
+        "transactionid": "1229275215",
+        "date": 1678286323507,
+        "uvr": "59b0fec38ee5be90adfde9fdabc25d49637544992fee17c2b067f3bcb063b540c3eafb374069b91bb022e586ab9f32aab0abb65df3c8e64697bff59d10873b5a192a7a3ce5eed0106c9470d0801f6537"
+    },
+    {
+        "bank_verify": true,
+        "firstname": "Surbhi",
+        "lastname": "Jadhav",
+        "phone": "9876543210",
+        "peerBankName": "Kotak Bank",
+        "peerBankCode": "Kotak001",
+        "peerBankBranch": "Goregaon West",
+        "currency": "INR",
+        "amount": "10.00",
+        "pid": "3EmH7DPeGD",
+        "status": "Transaction Successful",
+        "email": "surbhijadhav@gmail.com",
+        "transactionid": "1137925564",
+        "date": 1678286369431,
+        "uvr": "815d2d13c64d553d2780aed2d056c0381601766530cf65a4066092c69d8efd366dee2ad8fef4da1cc1e1089081040b05b069b6181868c67e990f53a797aa0fb914d33664be3a8888a4c575c001dfabcd"
+    }
+]
