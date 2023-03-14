@@ -8,9 +8,12 @@
     <title>Payment Gateway</title>
 </head>
 <body>
+
+
 <div class="form-center">
 
-<form action="">
+
+<form name="myform" action="" onsubmit ="return validateForm()" method="post" required>
   <h1>
     Payment Checkout
   </h1>
@@ -35,8 +38,10 @@
   <label for="currency">Currency:</label><br>
   <input type="text" id="currency" name="currency"><br>  
   
-  <input type="button" class="btn" onclick="alert('Details submitted Successfully')" value="Pay now">
+  <input type="submit" class="btn" value="Pay now" >
+
 </form>
 </div>
+
 </body>
 </html>
